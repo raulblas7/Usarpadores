@@ -5,7 +5,6 @@ export default class Arrow extends Phaser.GameObjects.Sprite{
 		scene.physics.world.enable(this);
 		this.setScale(0.15);
 		this.body.setVelocity(60,0);
-		//this.body.immovable = true;
 		this.body.setCollideWorldBounds(true);
 	}
 	hitArrow(obj1, obj2) {
