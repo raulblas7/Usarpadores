@@ -1,4 +1,4 @@
-import Sprites from './sprites.js';
+
 import Arrow from './arrow.js';
 import Player from './player.js';
 import Gladiator from './gladiador.js';
@@ -11,15 +11,16 @@ export default class Game extends Phaser.Scene {
   }
 
    preload() {  
-
-  	this.load.image("terreno", "images/terreno.png");
-  	//hacer sprites
+    //suelo
+    this.load.image("terreno", "images/terreno.png");
+    //sprites
   	this.load.image("gladiador", "images/gladiador1.png");
     this.load.image("gladiador2", "images/gladiador1.png");
   	this.load.image("jugador", "images/jugador1.png");
   	this.load.image("guerrero", "images/Guerrero1.png");
   	this.load.image("lancer", "images/lancer1.png");
     this.load.image("flecha","images/Arrow1.png")
+    //muro
   	this.load.image("muro", "images/muro.png");
     //flecha lanzada es false al inicio
     this.lanzada = false;
@@ -56,6 +57,7 @@ export default class Game extends Phaser.Scene {
     else {
         this.jugador.body.setVelocityY(0);
     }
+    //control del lanzamiento de flechas
     if(this.cursor.right.isDown)
     {
       if (!this.lanzada){

@@ -1,8 +1,8 @@
-export default class Arrow extends Phaser.GameObjects.Sprite{
+import Sprites from "./sprites.js";
+
+export default class Arrow extends Sprites{
 	constructor(scene, x, y, type){
 		super(scene, x, y, type);
-		scene.add.existing(this);
-		scene.physics.world.enable(this);
 		this.setScale(0.15);
 		this.body.setVelocity(60,0);
 	}

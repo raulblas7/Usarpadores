@@ -1,9 +1,8 @@
-export default class Player extends Phaser.GameObjects.Sprite{
+import Sprites from "./sprites.js";
+
+export default class Player extends Sprites{
 	constructor(scene, x, y, type){
 		super(scene, x, y, type);
-		scene.add.existing(this);
-		scene.physics.world.enable(this);
 		this.setScale(0.5);
-		this.body.setCollideWorldBounds(true);
 	}
 }
