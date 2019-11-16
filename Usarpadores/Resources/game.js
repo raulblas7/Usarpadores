@@ -4,10 +4,12 @@ import Player from './player.js';
 import Gladiator from './gladiador.js';
 import Lancer from './lancer.js';
 import Fighter from './fighter.js';
+import StatusBar from './statusbar.js';
 
 export default class Game extends Phaser.Scene {
-  constructor() {
-    super({ key: 'Game' });
+  constructor(   
+    ) {
+    super({ key: 'Game' } );
   }
 
    preload() {  
@@ -21,11 +23,14 @@ export default class Game extends Phaser.Scene {
   	this.load.image("lancer", "images/lancer1.png");
     this.load.image("flecha","images/Arrow1.png")
     //muro
-  	this.load.image("muro", "images/muro.png");
+    this.load.image("muro", "images/muro.png");
+    //barra de vida
+    this.load.image("statBar","images/statusbar.png");
     //flecha lanzada es false al inicio
     this.lanzada = false;
   }
   create() {
+  //this.statBar=new StatusBar();
     this.platforms = this.physics.add.staticGroup();
     this.terreno = this.add.image(0,0, "terreno");
     this.platforms.create(87.5, 225, "muro");
@@ -35,6 +40,7 @@ export default class Game extends Phaser.Scene {
     this.gladiador = new Gladiator(this, 600, 415, "gladiador");
     this.gladiador2 = new Gladiator(this, 600, 115, "gladiador");
     this.lancer = new Lancer(this, 600, 215, "lancer");
+    this.statbar = new StatusBar(this, 400, 35, "statBar");
 
   	this.terreno.setScale(7);
 
@@ -61,12 +67,14 @@ export default class Game extends Phaser.Scene {
     if(this.cursor.right.isDown)
     {
       if (!this.lanzada){
+        this.statbar.setPercent(200);
         this.flecha = new Arrow(this,this.jugador.x + (this.jugador.x/2), this.jugador.y, "flecha");
         console.log(this.flecha);
         this.lanzada = true;
       }
     }
     else if(this.cursor.right.isUp){
+
       this.lanzada = false;
     }
     if (this.flecha != undefined) {
