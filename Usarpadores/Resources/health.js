@@ -1,22 +1,23 @@
 
 export default class Health {
-	constructor(scene, health, type){
-    super(scene,health,type);
+  constructor( health)
+{
+  this.health=health;
   }
   
-     damage(daño){
-       if (this.alive)
-     {
-         this.health -= daño;
+     damage( enemy,platform){
 
-         if (this.health <= 0)
-         {
-             this.kill();
-         }
+      console.log(this.health);
+
+       if (this.health>0)
+     {
+         this.health -= 10;
+         console.log(this.health);
+        
      }
 
-     return this;
+     
     }
 
  
-  }
+}

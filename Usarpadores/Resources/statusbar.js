@@ -12,7 +12,7 @@ setPercent(percent)
     console.log(this.width);
     percent=percent/100;
     this.width = 750*percent;
-    //this.setScale(0.1,0.2);
+    this.setScale(this.width*0.0001,0.2);
 
 
 }

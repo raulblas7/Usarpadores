@@ -5,6 +5,7 @@ import Gladiator from './gladiador.js';
 import Lancer from './lancer.js';
 import Fighter from './fighter.js';
 import StatusBar from './statusbar.js';
+import Health from './health.js';
 
 export default class Game extends Phaser.Scene {
   constructor(   
@@ -34,24 +35,23 @@ export default class Game extends Phaser.Scene {
     this.platforms = this.physics.add.staticGroup();
     this.terreno = this.add.image(0,0, "terreno");
     this.platforms.create(87.5, 225, "muro");
-    
     this.jugador = new Player(this,87.5,225, "jugador");
     this.guerrero = new Fighter(this, 600, 315, "guerrero");
     this.gladiador = new Gladiator(this, 600, 415, "gladiador");
     this.gladiador2 = new Gladiator(this, 600, 115, "gladiador");
     this.lancer = new Lancer(this, 600, 215, "lancer");
     this.statbar = new StatusBar(this, 400, 35, "statBar");
-
+    this.health=100;
   	this.terreno.setScale(7);
 
     this.cursor = this.input.keyboard.createCursorKeys();
     //colision enemigos y muro
-    this.physics.add.collider(this.guerrero,this.platforms);
-    this.physics.add.collider(this.gladiador, this.platforms);
-    this.physics.add.collider(this.gladiador2, this.platforms);
-    this.physics.add.collider(this.lancer, this.platforms);
+    this.physics.add.collider(this.guerrero,this.platforms,this.damage,null,this);
+    this.physics.add.collider(this.gladiador, this.platforms,this.damage,null,this);
+    this.physics.add.collider(this.gladiador2, this.platforms,this.damage,null,this);
+    this.physics.add.collider(this.lancer, this.platforms,this.damage,null,this);
+    
   }
-
   update(time, delta) {   
     //control del jugador
     if(this.cursor.down.isDown){
@@ -67,9 +67,9 @@ export default class Game extends Phaser.Scene {
     if(this.cursor.right.isDown)
     {
       if (!this.lanzada){
-        this.statbar.setPercent(200);
+       // this.statbar.setPercent(200);
         this.flecha = new Arrow(this,this.jugador.x + (this.jugador.x/2), this.jugador.y, "flecha");
-        console.log(this.flecha);
+       // console.log(this.flecha);
         this.lanzada = true;
       }
     }
@@ -83,5 +83,18 @@ export default class Game extends Phaser.Scene {
       this.physics.add.collider(this.gladiador2,this.flecha,this.flecha.hitArrow,null,this);
       this.physics.add.collider(this.lancer,this.flecha,this.flecha.hitArrow,null,this);
     }
+    
   }
-}
+  damage( enemy,platform){
+
+
+     if (this.health>0)
+   {
+       this.health -= 10;
+       console.log(this.health);
+      
+   }
+  }
+
+   
+  }
