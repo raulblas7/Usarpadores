@@ -43,11 +43,14 @@ export default class Game extends Phaser.Scene {
   //this.statBar=new StatusBar();
     this.platforms = this.physics.add.staticGroup();
     this.terreno = this.add.image(0,0, "terreno");
+    this.gladiadores = this.add.group();
+    this.guerreros = this.add.group();
+    this.lancers = this.add.group();
     this.platforms.create(87.5, 225, "muro");
     this.jugador = new Player(this,87.5,225, "jugador");
-    this.guerrero = new Fighter(this, 600, 315, "guerrero");
-    this.gladiador2 = new Gladiator(this, 600, 115, "gladiador");
-    this.lancer = new Lancer(this, 600, 215, "lancer");
+    this.guerrero = new Fighter(this, 800, 315, "guerrero");
+    this.gladiador2 = new Gladiator(this, 800, 115, "gladiador");
+    this.lancer = new Lancer(this, 800, 215, "lancer");
     this.statbar = new StatusBar(this, 400, 35, "statBar");
     this.health = 100;
   	this.terreno.setScale(7);
@@ -55,9 +58,9 @@ export default class Game extends Phaser.Scene {
     this.wave = new Wave(1);
     //control de enemigos por oleada
     if(this.wave.number == 1){
-      numGladiadores = 2;
-      numGuerreros = 2;
-      numLancers = 2;
+      numGladiadores = 5;
+      numGuerreros = 5;
+      numLancers = 5;
     }
     else if(this.wave.number == 2){
       alert("haw");
@@ -67,10 +70,8 @@ export default class Game extends Phaser.Scene {
     this.cursor = this.input.keyboard.createCursorKeys();
 
     this.timeIni = 0;
-    this.timeSpawn = Phaser.Math.Between(100, 500);  
-    this.gladiadores = this.add.group();
-    this.guerreros = this.add.group();
-    this.lancers = this.add.group();
+    this.timeSpawn = Phaser.Math.Between(3000, 5000);  
+    
 
     //colision enemigos y muro
     this.physics.add.collider(this.guerreros,this.platforms,this.damage,null,this);
@@ -121,6 +122,30 @@ export default class Game extends Phaser.Scene {
 
           this.randomNum = Phaser.Math.Between(0, 2); //eleccion aleatoria de enemigo a colocar
           this.locationYSpawn = Phaser.Math.Between(0, 450); //posicion aleatoria de spawn ////////////////////////////////////////////////////
+
+          if(this.randomNum == 0 && actNumGladiadores >= numGladiadores){
+            this.randomNum = Phaser.Math.Between(1, 2);
+          }
+          else if(this.randomNum == 1 && actNumGuerreros >= numGuerreros){
+            this.randomNum = Phaser.Math.Between(1, 2);
+            if(this.randomNum == 1){
+              this.randomNum = 0;
+            }
+            else{
+              this.randomNum  = 2;
+            }
+          }
+          else if(this.randomNum == 2 && actNumLancers >= numLancers){
+            this.randomNum = Phaser.Math.Between(1, 2);
+            if(this.randomNum == 1){
+              this.randomNum = 0;
+            }
+            else{
+              this.randomNum = 1;
+            }
+          }
+          
+          //creacion de enemigos
           if(this.randomNum == 0 && actNumGladiadores < numGladiadores){           
             this.gladiadores.add(new Gladiator(this, 600, this.locationYSpawn, "gladiador"));
             actNumGladiadores++;
@@ -135,10 +160,10 @@ export default class Game extends Phaser.Scene {
           }
 
           this.timeIni = 0;
-          this.timeSpawn = Phaser.Math.Between(200, 500);
+          this.timeSpawn = Phaser.Math.Between(3000, 5000);
         }
         else{
-          this.timeIni += 3;
+          this.timeIni += delta;
         }
     }    
   }
