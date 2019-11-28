@@ -55,22 +55,18 @@ export default class Game extends Phaser.Scene {
     this.health = 100;
   	this.terreno.setScale(7);
     //
-    this.wave = new Wave(1);
+    this.wave = new Wave(2);
     //control de enemigos por oleada
-    if(this.wave.number == 1){
-      numGladiadores = 5;
-      numGuerreros = 5;
-      numLancers = 5;
+    if(this.wave.number >= 0){
+      numGladiadores = this.wave.numGladiadores1;
+      numGuerreros = this.wave.numGuerreros1;
+      numLancers = this.wave.numLancers1;
     }
-    else if(this.wave.number == 2){
-      alert("haw");
-    }
-
-
+ 
     this.cursor = this.input.keyboard.createCursorKeys();
 
     this.timeIni = 0;
-    this.timeSpawn = Phaser.Math.Between(3000, 5000);  
+    this.timeSpawn = /*Phaser.Math.Between(3000, 5000)*/2000;  
     
 
     //colision enemigos y muro
@@ -87,10 +83,10 @@ export default class Game extends Phaser.Scene {
     
     //control del jugador
     if(this.cursor.down.isDown){
-        this.jugador.body.setVelocityY(60);
+        this.jugador.body.setVelocityY(100);
     }
     else if(this.cursor.up.isDown){
-        this.jugador.body.setVelocityY(-60);
+        this.jugador.body.setVelocityY(-100);
     }
     else {
         this.jugador.body.setVelocityY(0);
@@ -120,9 +116,9 @@ export default class Game extends Phaser.Scene {
     if (this.gladiadores != undefined && this.guerreros != undefined && this.lancers != undefined) {
         if(this.timeIni >= this.timeSpawn){
 
+          this.locationYSpawn = Phaser.Math.Between(0, 450); //posicion aleatoria de spawn 
           this.randomNum = Phaser.Math.Between(0, 2); //eleccion aleatoria de enemigo a colocar
-          this.locationYSpawn = Phaser.Math.Between(0, 450); //posicion aleatoria de spawn ////////////////////////////////////////////////////
-
+          
           if(this.randomNum == 0 && actNumGladiadores >= numGladiadores){
             this.randomNum = Phaser.Math.Between(1, 2);
           }
@@ -160,7 +156,7 @@ export default class Game extends Phaser.Scene {
           }
 
           this.timeIni = 0;
-          this.timeSpawn = Phaser.Math.Between(3000, 5000);
+          this.timeSpawn = /*Phaser.Math.Between(3000, 5000)*/ 2000;
         }
         else{
           this.timeIni += delta;
