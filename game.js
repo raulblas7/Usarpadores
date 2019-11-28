@@ -6,7 +6,6 @@ import Lancer from './lancer.js';
 import Fighter from './fighter.js';
 import StatusBar from './statusbar.js';
 import Health from './health.js';
-//
 import Wave from './wave.js';
 
 //variables para la cantidad de enemigos
