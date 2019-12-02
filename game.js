@@ -65,8 +65,13 @@ export default class Game extends Phaser.Scene {
     this.cursor = this.input.keyboard.createCursorKeys();
 
     this.timeIni = 0;
-    this.timeSpawn = /*Phaser.Math.Between(3000, 5000)*/2000;  
-    
+    this.timeSpawn = /*Phaser.Math.Between(3000, 5000)*/10000;
+    this.timeSpawnGlad = /*Phaser.Math.Between(3000, 5000)*/ 2000;
+    this.timeSpawnFight = 3000;
+    this.timeSpawnLanc = 5000; 
+    this.timeIniGlad = 0;
+    this.timeIniFight = 0;
+    this.timeIniLanc = 0;
 
     //colision enemigos y muro
     this.physics.add.collider(this.guerreros,this.platforms,this.damage,null,this);
@@ -77,8 +82,6 @@ export default class Game extends Phaser.Scene {
     
   }
   update(time, delta) {  
-    
-    this.Create2; 
     
     //control del jugador
     if(this.cursor.down.isDown){
@@ -113,54 +116,42 @@ export default class Game extends Phaser.Scene {
 
     //spawn de enemigos
     if (this.gladiadores != undefined && this.guerreros != undefined && this.lancers != undefined) {
-        if(this.timeIni >= this.timeSpawn){
 
-          this.locationYSpawn = Phaser.Math.Between(0, 450); //posicion aleatoria de spawn 
-          this.randomNum = Phaser.Math.Between(0, 2); //eleccion aleatoria de enemigo a colocar
-          
-          if(this.randomNum == 0 && actNumGladiadores >= numGladiadores){
-            this.randomNum = Phaser.Math.Between(1, 2);
-          }
-          else if(this.randomNum == 1 && actNumGuerreros >= numGuerreros){
-            this.randomNum = Phaser.Math.Between(1, 2);
-            if(this.randomNum == 1){
-              this.randomNum = 0;
-            }
-            else{
-              this.randomNum  = 2;
-            }
-          }
-          else if(this.randomNum == 2 && actNumLancers >= numLancers){
-            this.randomNum = Phaser.Math.Between(1, 2);
-            if(this.randomNum == 1){
-              this.randomNum = 0;
-            }
-            else{
-              this.randomNum = 1;
-            }
-          }
-          
           //creacion de enemigos
-          if(this.randomNum == 0 && actNumGladiadores < numGladiadores){           
+          if(this.timeIniGlad >= this.timeSpawnGlad && actNumGladiadores < numGladiadores){    
+            this.locationYSpawn = Phaser.Math.Between(0, 450); //posicion aleatoria de spawn        
             this.gladiadores.add(new Gladiator(this, 600, this.locationYSpawn, "gladiador"));
             actNumGladiadores++;
+            this.timeIniGlad = 0;
           }
-          else if(this.randomNum == 1 && actNumGuerreros < numGuerreros){
-            this.guerreros.add(new Fighter(this, 600, this.locationYSpawn, "guerrero"));
-            actNumGuerreros++;
-          }
-          else if(this.randomNum == 2 && actNumLancers < numLancers){
-            this.gladiadores.add(new Lancer(this, 600, this.locationYSpawn, "lancer"));
-            actNumLancers++;
+          else{
+            this.timeIniGlad+= delta;
           }
 
-          this.timeIni = 0;
-          this.timeSpawn = /*Phaser.Math.Between(3000, 5000)*/ 2000;
-        }
-        else{
-          this.timeIni += delta;
-        }
-    }    
+          if(this.timeIniFight >= this.timeSpawnFight && actNumGuerreros < numGuerreros){    
+            this.locationYSpawn = Phaser.Math.Between(0, 450); //posicion aleatoria de spawn        
+            this.guerreros.add(new Fighter(this, 600, this.locationYSpawn, "guerrero"));
+            actNumGuerreros++;
+            this.timeIniFight = 0;
+          }
+          else{
+            this.timeIniFight += delta;
+          }
+
+          if(this.timeIniLanc >= this.timeSpawnLanc && actNumLancers < numLancers){    
+            this.locationYSpawn = Phaser.Math.Between(0, 450); //posicion aleatoria de spawn        
+            this.lancers.add(new Lancer(this, 600, this.locationYSpawn, "lancer"));
+            actNumLancers++;
+            this.timeIniLanc = 0;
+          }
+          else{
+            this.timeIniLanc += delta;
+          }
+        
+          this.timeSpawnGlad = /*Phaser.Math.Between(3000, 5000)*/ 2000;
+          this.timeSpawnFight = 3000;
+          this.timeSpawnLanc = 5000;
+        }      
   }
 
   damage(enemy,platform){
