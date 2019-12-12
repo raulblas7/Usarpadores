@@ -15,7 +15,7 @@ var numLancers;
 var actNumGladiadores = 0;
 var actNumGuerreros = 0;
 var actNumLancers = 0;
-export default class Game extends Phaser.Scene {
+export default class Game extends Phaser.Scene { 
   constructor(   
     ) {
     super({ key: 'Game' } );
