@@ -15,6 +15,7 @@ var numLancers;
 var actNumGladiadores = 0;
 var actNumGuerreros = 0;
 var actNumLancers = 0;
+//var totalEnemigos;
 export default class Game extends Phaser.Scene {
   constructor(   
     ) {
@@ -54,18 +55,20 @@ export default class Game extends Phaser.Scene {
     this.health = 100;
   	this.terreno.setScale(7);
     //
-    this.wave = new Wave(2);
+    this.wave = new Wave(1);
     //control de enemigos por oleada
     if(this.wave.number >= 0){
       numGladiadores = this.wave.numGladiadores1;
       numGuerreros = this.wave.numGuerreros1;
       numLancers = this.wave.numLancers1;
+      //totalEnemigos = numGladiadores + numGuerreros + numLancers;
     }
+    this.totalEnemigos = numGladiadores + numGuerreros + numLancers;
  
     this.cursor = this.input.keyboard.createCursorKeys();
 
+    //control de tiempos de spawn de enemigos
     this.timeIni = 0;
-    this.timeSpawn = /*Phaser.Math.Between(3000, 5000)*/10000;
     this.timeSpawnGlad = /*Phaser.Math.Between(3000, 5000)*/ 2000;
     this.timeSpawnFight = 3000;
     this.timeSpawnLanc = 5000; 
@@ -85,10 +88,10 @@ export default class Game extends Phaser.Scene {
     
     //control del jugador
     if(this.cursor.down.isDown){
-        this.jugador.body.setVelocityY(100);
+        this.jugador.body.setVelocityY(200);
     }
     else if(this.cursor.up.isDown){
-        this.jugador.body.setVelocityY(-100);
+        this.jugador.body.setVelocityY(-200);
     }
     else {
         this.jugador.body.setVelocityY(0);
@@ -112,6 +115,16 @@ export default class Game extends Phaser.Scene {
       this.physics.add.collider(this.gladiadores,this.flecha,this.flecha.hitArrow,null,this);
       //this.physics.add.collider(this.gladiador2,this.flecha,this.flecha.hitArrow,null,this);
       this.physics.add.collider(this.lancers,this.flecha,this.flecha.hitArrow,null,this);
+
+      ////////////////////////////////////////////////////////////////////////
+      this.physics.add.collider(this.guerreros,this.flecha,this.lessEnem);
+      this.physics.add.collider(this.gladiadores,this.flecha,this.lessEnem);
+      //this.physics.add.collider(this.gladiador2,this.flecha,this.flecha.hitArrow,null,this);
+      this.physics.add.collider(this.lancers,this.flecha,this.lessEnem);
+    }
+    console.log(this.totalEnemigos);
+    if(this.totalEnemigos<=0){
+      alert("fin oleada");
     }
 
     //spawn de enemigos
@@ -160,6 +173,11 @@ export default class Game extends Phaser.Scene {
       this.health -= 10;
       console.log(this.health);   
     }
+  }
+
+  lessEnem(){
+    this.totalEnemigos -= 1;
+    alert(this.totalEnemigos);
   }
   
 }
