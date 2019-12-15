@@ -1,0 +1,45 @@
+
+ #header{
+  width: 100%;
+  height: auto;
+  background-color: #000;
+ }
+
+ #header ul{
+  text-align: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+ }
+
+ #header ul li{
+  display: inline-block;
+ }
+
+ #header ul li a{
+  color: white;
+  display: block;
+  padding: 20px 120px;
+  text-decoration: none;
+ }
+
+ #header ul li a:hover{
+  background-color: #8B0000;
+ }
+
+ p{
+  width: 100%;
+  height: auto;
+  background: url(pergamino.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 600px 400px;
+  color: #000;
+  text-align: center;
+  font-size: x-large;
+}
+
+#module{
+  width: 100%;
+  height: auto;
+}

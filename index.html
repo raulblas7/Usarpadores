@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="images/jugador1.png" type="image/png" />
+    <meta name="viewport" content="width=device-width, initial-scale=2.0">
+    <link rel="stylesheet" href="game.css">
+    <script src="phaser.min.js"></script>
+   
+    <title>Lastline Defense</title>
+</head>
+
+<body background="fondo2.jpg"  bgcolor="white" width = 100% height = auto>
+    </table>
+        <tr>
+            <td align ="center">
+                    <table width=100% height = auto border="0" align="center" cellpadding="1" cellspacing="1">
+        <tr>
+            <td align ="center"><img src="letras.png" width = 100% height= auto/></td>
+        </tr>
+
+    </table>
+
+    <div id="header">
+        <ul class="nav">
+            <li><a href="index.html">Play</a></li>
+            <li><a href="About.html">About</a></li>
+            <li><a href="Contact.html">Contact</a></li>
+        </ul>
+    </div>
+	
+    <script type="module">
+        import Game from './game.js';
+        import MainMenu from './MainMenu.js';
+        import Controls from './Controls.js';
+        var config = {
+            type: Phaser.AUTO,
+            width: 700,
+            height: 450,
+            pixelArt: true,
+            input: {
+                gamepad: true
+            },
+            scale: {
+                mode: Phaser.Scale.FIT,
+                autoCenter: Phaser.Scale.CENTER_BOTH
+            },
+            scene: [ MainMenu, Controls, Game],
+            physics: { default: 'arcade', arcade: {  debug: false } }
+        };
+        new Phaser.Game(config);
+    </script>
+</body>
+
+</html>
