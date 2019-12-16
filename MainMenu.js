@@ -10,6 +10,10 @@ export default class MainMenu extends Phaser.Scene {
         this.load.image("botonPlay", "images/playboton.png");
         this.load.image("botonControls", "images/controlsboton.png");
         this.load.image("fondoMenu", "images/fondomenu.png");
+        this.load.audio("music","audio/music.mp3");
+
+        this.load.json('fontJSON', 'font/font.json');
+        this.load.image('font', 'font/font.png');
     }
 
     create(){
@@ -20,9 +24,13 @@ export default class MainMenu extends Phaser.Scene {
        botonPlay.setScale(0.5);
        let botonControls = this.add.image(350,350,"botonControls");
        botonControls.setScale(0.5);
-
+       let audio =this.sound.add("music",{loop:true})
+       audio.play();
        botonPlay.setInteractive();
        botonPlay.on("pointerdown", ()=>{
+       audio.stop();
+          const fontJSON = this.cache.json.get('fontJSON');
+          this.cache.bitmapFont.add('pixel', Phaser.GameObjects.RetroFont.Parse(this, fontJSON));
            this.scene.start('Game');
        })
 
@@ -30,5 +38,6 @@ export default class MainMenu extends Phaser.Scene {
        botonControls.on("pointerdown", ()=>{
            this.scene.start('Controls');
        })
+       
     }
 }

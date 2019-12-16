@@ -25,6 +25,8 @@ export default class Game extends Phaser.Scene {
    preload() {  
     //suelo
     this.load.image("terreno", "images/terreno.png");
+    this.load.image('tablero', "images/tablero.png");
+
     //sprites
   	this.load.image("gladiador", "images/gladiador1.png");
     this.load.image("gladiador2", "images/gladiador1.png");
@@ -40,7 +42,7 @@ export default class Game extends Phaser.Scene {
     this.lanzada = false;
   }
   create() {
-  //this.statBar=new StatusBar();
+    
     this.platforms = this.physics.add.staticGroup();
     this.terreno = this.add.image(0,0, "terreno");
     this.gladiadores = this.add.group();
@@ -111,7 +113,7 @@ export default class Game extends Phaser.Scene {
       this.lanzada = false;
     }
     if (this.flecha != undefined) {
-      this.physics.add.collider(this.guerreros,this.flecha,this.flecha.hitArrow,null,this);
+    /*  this.physics.add.collider(this.guerreros,this.flecha,this.flecha.hitArrow,null,this);
       this.physics.add.collider(this.gladiadores,this.flecha,this.flecha.hitArrow,null,this);
       //this.physics.add.collider(this.gladiador2,this.flecha,this.flecha.hitArrow,null,this);
       this.physics.add.collider(this.lancers,this.flecha,this.flecha.hitArrow,null,this);
@@ -120,7 +122,16 @@ export default class Game extends Phaser.Scene {
       this.physics.add.collider(this.guerreros,this.flecha,this.lessEnem);
       this.physics.add.collider(this.gladiadores,this.flecha,this.lessEnem);
       //this.physics.add.collider(this.gladiador2,this.flecha,this.flecha.hitArrow,null,this);
-      this.physics.add.collider(this.lancers,this.flecha,this.lessEnem);
+      this.physics.add.collider(this.lancers,this.flecha,this.lessEnem);*/
+    
+
+      this.physics.add.collider(this.guerreros,this.flecha,this.hit,null,this);
+      this.physics.add.collider(this.gladiadores,this.flecha,this.hit,null,this);
+      //this.physics.add.collider(this.gladiador2,this.flecha,this.flecha.hitArrow,null,this);
+      this.physics.add.collider(this.lancers,this.flecha,this.hit,null,this);
+      
+     
+     
     }
     console.log(this.totalEnemigos);
     if(this.totalEnemigos<=0){
@@ -176,8 +187,23 @@ export default class Game extends Phaser.Scene {
   }
 
   lessEnem(){
+    
     this.totalEnemigos -= 1;
     alert(this.totalEnemigos);
+  }
+  hit(enemy,flecha)
+  {
+    console.log('hola');
+
+   this.lessEnem();
+   console.log('hola');
+
+   flecha.hitArrow(enemy,flecha);
+   console.log('hola');
+
+  
+
+    
   }
   
 }
