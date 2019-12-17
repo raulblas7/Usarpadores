@@ -12,7 +12,12 @@ export default class Wave{
         else if(number == 2){
             this.numGladiadores1 = 3;
             this.numGuerreros1 = 3;
-            this.numLancers1 = 3;
+            this.numLancers1 = 1;
+        }
+        else if(number == 3){
+            this.numGladiadores1 = 2;
+            this.numGuerreros1 = 2;
+            this.numLancers1 = 2;
         }
         
     }
