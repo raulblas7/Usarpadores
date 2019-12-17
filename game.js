@@ -39,10 +39,10 @@ export default class Game extends Phaser.Scene {
 
     this.lanzada = false;
     this.registry.set('points',0);
-    this.registry.set('health',1000);
+    this.registry.set('health',500);
 
     this.puntos=0;
-    this.health=1000;
+    this.health=500;
   }
   create() {
     
@@ -88,8 +88,8 @@ export default class Game extends Phaser.Scene {
 
    this.registry.events.on('changedata',(parent,key,data)=>
     {
-if(key==='points'){console.log(data);}
-if(key==='health'){console.log(data);}
+     if(key==='points'){console.log(data);}
+      if(key==='vida'){console.log(data);}
 
     });
     
@@ -187,11 +187,13 @@ if(key==='health'){console.log(data);}
   }
 
   damage(enemy,platform){
+    
+
     if (this.health>0)
     {
-      this.health-=10;
-      this.registry.set('health',this.health);
-    }
+      this.health-=100;
+      this.registry.events.emit('vida',this.health);
+       }
     else {this.scene.start('GameOver');}
   }
 
