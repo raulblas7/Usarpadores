@@ -9,5 +9,6 @@ export default class Arrow extends Sprites{
 	hitArrow(obj1, obj2) {
    		obj1.destroy();
 		obj2.destroy();
+       
   }
 }

@@ -28,6 +28,8 @@ export default class Game extends Phaser.Scene {
    preload() {  
     //suelo
     this.load.image("terreno", "images/terreno.png");
+    this.load.image('tablero', "images/tablero.png");
+
     //sprites
   	this.load.image("gladiador", "images/gladiador1.png");
     this.load.image("gladiador2", "images/gladiador1.png");
@@ -41,13 +43,17 @@ export default class Game extends Phaser.Scene {
     this.load.image("speed", "images/POWUPSPEED.png");
     //muro
     this.load.image("muro", "images/muro.png");
-    //barra de vida
-    this.load.image("statBar","images/statusbar.png");
-    //flecha lanzada es false al inicio
+
     this.lanzada = false;
+    this.registry.set('points',0);
+    this.registry.set('health',1000);
+
+    this.puntos=0;
+    this.health=1000;
   }
   create() {
-  //this.statBar=new StatusBar();
+    
+    this.scene.launch('UI');
     this.platforms = this.physics.add.staticGroup();
     this.terreno = this.add.image(0,0, "terreno");
     this.gladiadores = this.add.group();
@@ -58,6 +64,7 @@ export default class Game extends Phaser.Scene {
     this.guerrero = new Fighter(this, 800, 315, "guerrero");
     this.gladiador2 = new Gladiator(this, 800, 115, "gladiador");
     this.lancer = new Lancer(this, 800, 215, "lancer");
+
     this.statbar = new StatusBar(this, 400, 35, "statBar");
     this.health = 100;
     this.terreno.setScale(7);
@@ -73,6 +80,7 @@ export default class Game extends Phaser.Scene {
     this.powHealth.setScale(0.1);
     this.powBomb.setScale(0.1);
     this.powSpeed.setScale(0.1);*/
+ flechas
     //
     this.wave = new Wave(numOleada);
     //control de enemigos por oleada
@@ -102,6 +110,12 @@ export default class Game extends Phaser.Scene {
     this.physics.add.collider(this.gladiador2, this.platforms,this.damage,null,this);
     this.physics.add.collider(this.lancers, this.platforms,this.damage,null,this);
 
+   this.registry.events.on('changedata',(parent,key,data)=>
+    {
+if(key==='points'){console.log(data);}
+if(key==='health'){console.log(data);}
+
+    });
     
   }
   update(time, delta) {  
@@ -131,6 +145,7 @@ export default class Game extends Phaser.Scene {
       this.lanzada = false;
     }
     if (this.flecha != undefined) {
+
       this.physics.add.collider(this.guerreros,this.flecha,this.flechaGolpea, null, this);
       this.physics.add.collider(this.gladiadores,this.flecha,this.flechaGolpea, null, this);
       this.physics.add.collider(this.lancers,this.flecha,this.flechaGolpea, null, this);
@@ -138,6 +153,7 @@ export default class Game extends Phaser.Scene {
 
     console.log(this.totalEnemigos);
 
+flechas
     if(this.totalEnemigos<=0){
       
       this.timeOleada -= delta;
@@ -208,12 +224,14 @@ export default class Game extends Phaser.Scene {
   damage(enemy,platform){
     if (this.health>0)
     {
-      this.health -= 10;
-      console.log(this.health);   
+      this.health-=10;
+      this.registry.set('health',this.health);
     }
+    else {this.scene.start('GameOver');}
   }
 
   lessEnem(){
+    
     this.totalEnemigos -= 1;
     console.log(this.totalEnemigos);
   }
@@ -221,6 +239,20 @@ export default class Game extends Phaser.Scene {
   flechaGolpea(enemy, arrow){
     this.flecha.hitArrow(enemy, arrow);   
     this.lessEnem();
+  }
+  hit(enemy,flecha)
+  {
+ 
+   this.lessEnem();
+
+   flecha.hitArrow(enemy,flecha);
+
+   this.puntos++;
+   this.registry.events.emit('puntos',this.puntos);
+
+  
+
+    
   }
   
 }
