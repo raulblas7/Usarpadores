@@ -36,13 +36,17 @@ export default class Game extends Phaser.Scene {
     this.load.image("flecha","images/Arrow1.png")
     //muro
     this.load.image("muro", "images/muro.png");
-    //barra de vida
-    this.load.image("statBar","images/statusbar.png");
-    //flecha lanzada es false al inicio
+
     this.lanzada = false;
+    this.registry.set('points',0);
+    this.registry.set('health',1000);
+
+    this.puntos=0;
+    this.health=1000;
   }
   create() {
     
+    this.scene.launch('UI');
     this.platforms = this.physics.add.staticGroup();
     this.terreno = this.add.image(0,0, "terreno");
     this.gladiadores = this.add.group();
@@ -53,8 +57,6 @@ export default class Game extends Phaser.Scene {
     this.guerrero = new Fighter(this, 800, 315, "guerrero");
     this.gladiador2 = new Gladiator(this, 800, 115, "gladiador");
     this.lancer = new Lancer(this, 800, 215, "lancer");
-    this.statbar = new StatusBar(this, 400, 35, "statBar");
-    this.health = 100;
   	this.terreno.setScale(7);
     //
     this.wave = new Wave(1);
@@ -84,6 +86,12 @@ export default class Game extends Phaser.Scene {
     this.physics.add.collider(this.gladiador2, this.platforms,this.damage,null,this);
     this.physics.add.collider(this.lancers, this.platforms,this.damage,null,this);
 
+   this.registry.events.on('changedata',(parent,key,data)=>
+    {
+if(key==='points'){console.log(data);}
+if(key==='health'){console.log(data);}
+
+    });
     
   }
   update(time, delta) {  
@@ -133,7 +141,7 @@ export default class Game extends Phaser.Scene {
      
      
     }
-    console.log(this.totalEnemigos);
+      console.log(this.totalEnemigos);
     if(this.totalEnemigos<=0){
       alert("fin oleada");
     }
@@ -181,9 +189,10 @@ export default class Game extends Phaser.Scene {
   damage(enemy,platform){
     if (this.health>0)
     {
-      this.health -= 10;
-      console.log(this.health);   
+      this.health-=10;
+      this.registry.set('health',this.health);
     }
+    else {this.scene.start('GameOver');}
   }
 
   lessEnem(){
@@ -193,13 +202,13 @@ export default class Game extends Phaser.Scene {
   }
   hit(enemy,flecha)
   {
-    console.log('hola');
-
+ 
    this.lessEnem();
-   console.log('hola');
 
    flecha.hitArrow(enemy,flecha);
-   console.log('hola');
+
+   this.puntos++;
+   this.registry.events.emit('puntos',this.puntos);
 
   
 
