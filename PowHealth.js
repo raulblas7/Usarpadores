@@ -5,8 +5,4 @@ export default class PowHealth extends Sprites{
         super(scene, x, y, type);
         this.setScale(0.1);
         }
-        
-        increaseWallHealth(healthAdd, currentHealth){
-        currentHealth += healthAdd;
-        }
 }

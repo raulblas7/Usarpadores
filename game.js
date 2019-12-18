@@ -251,13 +251,46 @@ export default class Game extends Phaser.Scene {
     console.log("bombed");
     this.bomb = this.add.image(350, 225, "bomb");
     this.bomb.setScale(0.1);
-    this.Explosion = this.add.image(350,225, "explosion");
-    this.Explosion.setScale(0.1);
+    this.time.addEvent({
+      delay: 2000,
+      callback: ()=>{
+        
+        this.Explosion = this.add.image(350,225, "explosion");
+        this.physics.add.collider(this.guerreros,this.Explosion, this.explode, null, this);
+        this.physics.add.collider(this.gladiadores,this.Explosion, this.explode, null, this);
+        this.physics.add.collider(this.lancers,this.Explosion, this.explode, null, this);
+        this.Explosion.setScale(0.3);
+        this.bomb.destroy();
+        this.time.addEvent({
+          delay: 2000,
+          callback: ()=>{
+            this.Explosion.destroy();
+          },
+          loop: false
+      })
+      },
+      loop: false
+  })
+    
+  }
+
+  explode(obj1, obj2){
+    obj2.destroy();
+    console.log("heya00");
   }
 
   powSpeeding(){
     console.log("sped up");
     playVel = 500;
+
+    this.time.addEvent({
+      delay: 3000,
+      callback: ()=>{
+          playVel = 200;
+      },
+      loop: true
+  })
+    
   }
   
 }
