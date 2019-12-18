@@ -36,6 +36,7 @@
         import UI from './UI.js';
         import Controls from './Controls.js';
         import GameOver from './GameOver.js';
+        import YouWin from './YouWin.js';
 
         var config = {
             type: Phaser.AUTO,
@@ -49,7 +50,7 @@
                 mode: Phaser.Scale.FIT,
                 autoCenter: Phaser.Scale.CENTER_BOTH
             },
-            scene: [ MainMenu, Controls, Game,UI,GameOver],
+            scene: [ MainMenu, Controls, Game, UI, GameOver, YouWin],
             physics: { default: 'arcade', arcade: {  debug: false } }
         };
         new Phaser.Game(config);

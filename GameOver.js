@@ -1,17 +1,15 @@
 class Gameover extends Phaser.Scene {
     constructor() {
-        super('Gameover');
+        super('GameOver');
     }
 
     preload() {
-        console.log('Soy Gameover');
+        this.load.image("fondoMenu", "images/fondomenu.png");
     }
 
     create() {
+        this.fondoMenu = this.add.image(350,200,"fondoMenu");
         this.scene.stop('UI');
-        this.add.dynamicBitmapText(this.sys.game.config.width/2, 
-            this.sys.game.config.height/2 - 30, 
-            'pixel', 'GAMEOVER', 20).setOrigin(0.5);
         
         this.evento = setTimeout(() => {
             this.salirEscene();
@@ -27,7 +25,7 @@ class Gameover extends Phaser.Scene {
 
     salirEscene() {
         clearTimeout(this.evento);
-        this.scene.start('Menu');
+        this.scene.start('MainMenu');
     }
 
 }

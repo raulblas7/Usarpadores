@@ -27,7 +27,7 @@ export default class Game extends Phaser.Scene {
     ) {
     super({ key: 'Game' } );
   }
-
+  
    preload() {  
     //suelo
     this.load.image("terreno", "images/terreno.png");
@@ -101,10 +101,6 @@ export default class Game extends Phaser.Scene {
       numGuerreros = this.wave.numGuerreros1;
       numLancers = this.wave.numLancers1;
     }
-
-    if(this.numOleada > this.wave.totalWaves){
-      console.log("has ganado");
-    }
     this.totalEnemigos = numGladiadores + numGuerreros + numLancers;
  
     this.cursor = this.input.keyboard.createCursorKeys();
@@ -146,8 +142,9 @@ export default class Game extends Phaser.Scene {
     
   }
   update(time, delta) {  
-    if(this.wave.number > this.wave.totalWaves) {
-      this.scene.start('MainMenu');
+
+    if(this.wave.number > this.wave.totalWaves) {     
+      this.scene.start('YouWin');
     }
 
     /////////////////////////////////////////////////////control jugador y flechas////////////////////////////////////////////////////
@@ -351,9 +348,7 @@ export default class Game extends Phaser.Scene {
     this.lessEnem();
   }
 
-  powSpeeding(){
-    console.log("sped up");
-    
+  powSpeeding(){    
     var saveVel = playVel;
     playVel *= 2;
 

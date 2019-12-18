@@ -9,7 +9,6 @@ class UI extends Phaser.Scene {
 
     preload() {
         console.log('Soy UI');
-
     }
     
     create() {
