@@ -22,7 +22,7 @@ var actNumLancers = 0;
 var numOleada = 1;
 var ponTitulo = true;
 //velocidad de jugador
-var playVel = 200;
+var playVel = 50;
 export default class Game extends Phaser.Scene {
   constructor(   
     ) {
@@ -102,6 +102,10 @@ export default class Game extends Phaser.Scene {
       numGuerreros = this.wave.numGuerreros1;
       numLancers = this.wave.numLancers1;
     }
+
+    if(this.numOleada > this.wave.totalWaves){
+      console.log("has ganado");
+    }
     this.totalEnemigos = numGladiadores + numGuerreros + numLancers;
  
     this.cursor = this.input.keyboard.createCursorKeys();
@@ -143,6 +147,10 @@ export default class Game extends Phaser.Scene {
     
   }
   update(time, delta) {  
+    if(this.wave.number > this.wave.totalWaves) {
+      this.scene.start('MainMenu');
+    }
+
     /////////////////////////////////////////////////////control jugador y flechas////////////////////////////////////////////////////
     if(this.cursor.down.isDown){
         this.jugador.body.setVelocityY(playVel);
@@ -216,7 +224,6 @@ export default class Game extends Phaser.Scene {
 
     
     if(this.totalEnemigos<=0){
-        
         if(ponTitulo){
           this.finOleada = this.add.image(350, 225, "finOleada");
           ponTitulo = false;
@@ -281,10 +288,12 @@ export default class Game extends Phaser.Scene {
             this.timeIniLanc += delta;
           }
         
-          this.timeSpawnGlad = /*Phaser.Math.Between(3000, 5000)*/ 200;
-          this.timeSpawnFight = 300;
-          this.timeSpawnLanc = 500;
+          this.timeSpawnGlad = Phaser.Math.Between(2000, 2500);
+          this.timeSpawnFight = Phaser.Math.Between(500, 1000);
+          this.timeSpawnLanc = Phaser.Math.Between(4000, 4500);
         }      
+      
+        
   }
 
   /////////////////////////////////////////////////////resto de metodos////////////////////////////////////////////////////
@@ -343,14 +352,16 @@ export default class Game extends Phaser.Scene {
 
   powSpeeding(){
     console.log("sped up");
-    playVel = 500;
+    
+    var saveVel = playVel;
+    playVel *= 2;
 
     this.time.addEvent({
       delay: 3000,
       callback: ()=>{
-          playVel = 200;
+          playVel = saveVel;
       },
-      loop: true
+      loop: false
   })
     
   }
