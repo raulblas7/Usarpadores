@@ -4,7 +4,6 @@ import Player from './player.js';
 import Gladiator from './gladiador.js';
 import Lancer from './lancer.js';
 import Fighter from './fighter.js';
-import Health from './health.js';
 import Wave from './wave.js';
 import PowHealth from './PowHealth.js';
 import PowBomb from './PowBomb.js';
@@ -20,8 +19,9 @@ var actNumLancers = 0;
 //variable de oleada
 var numOleada = 1;
 var ponTitulo = true;
+
 //velocidad de jugador
-var playVel = 50;
+var playVel = 100;
 export default class Game extends Phaser.Scene {
   constructor(   
     ) {
@@ -58,11 +58,11 @@ export default class Game extends Phaser.Scene {
 
     this.lanzada = false;
     this.registry.set('points',0);
-    this.registry.set('health',500);
+    this.registry.set('health',1000);
 
     this.puntos=0;
 
-    this.health=1000;
+    this.health = 1000;
 
     this.letterQcreated = false;
     this.letterWcreated = false;
@@ -119,9 +119,9 @@ export default class Game extends Phaser.Scene {
     //control de tiempo lanzamineto flechas
     this.timeArrow = 250;
     //control de tiempo de powerUps
-    this.timeBomb = 2000;
-    this.timeHealth = 1000;
-    this.timeSpeed = 1500;
+    this.timeBomb = 20000;
+    this.timeHealth = 6000;
+    this.timeSpeed = 4500;
 
     //colision enemigos y muro
     this.physics.add.collider(this.guerreros,this.platforms,this.damage,null,this);
@@ -192,7 +192,7 @@ export default class Game extends Phaser.Scene {
     }
     if(this.timeHealth <= 0 && this.cursor_Q.isDown){
       this.powHealing();
-      this.timeHealth = 1000;
+      this.timeHealth = 6000;
       this.letterQ.destroy();
       this.letterQcreated = false;
     }
@@ -203,7 +203,7 @@ export default class Game extends Phaser.Scene {
     }
     if(this.timeBomb <= 0 && this.cursor_W.isDown){
       this.powBombing();
-      this.timeBomb = 2000;
+      this.timeBomb = 20000;
       this.letterW.destroy();
       this.letterWcreated = false;
     }
@@ -214,14 +214,12 @@ export default class Game extends Phaser.Scene {
     }
     if(this.timeSpeed <= 0 && this.cursor_E.isDown){
       this.powSpeeding();
-      this.timeSpeed = 1500;
+      this.timeSpeed = 4500;
       this.letterE.destroy();
       this.letterEcreated = false;
     }
     /////////////////////////////////////////////////////control oleadas////////////////////////////////////////////////////
-    console.log(this.totalEnemigos);
-
-    
+ 
     if(this.totalEnemigos<=0){
         if(ponTitulo){
           this.finOleada = this.add.image(350, 225, "finOleada");
@@ -287,9 +285,9 @@ export default class Game extends Phaser.Scene {
             this.timeIniLanc += delta;
           }
         
-          this.timeSpawnGlad = Phaser.Math.Between(2000, 2500);
+          this.timeSpawnGlad = Phaser.Math.Between(1000, 1500);
           this.timeSpawnFight = Phaser.Math.Between(500, 1000);
-          this.timeSpawnLanc = Phaser.Math.Between(4000, 4500);
+          this.timeSpawnLanc = Phaser.Math.Between(3000, 3500);
         }      
       
         
@@ -318,7 +316,13 @@ export default class Game extends Phaser.Scene {
   }
 
   powHealing(){ //aqui controlamos el tiempo de cada uno
-    console.log("healed");
+
+      this.health += 200;
+      if(this.health > 1000){
+        this.health = 1000;
+      }
+      this.registry.events.emit('vida',this.health);
+    
   }
 
   powBombing(){
