@@ -72,9 +72,9 @@ export default class Game extends Phaser.Scene {
     this.lancers = this.add.group();
     this.platforms.create(87.5, 225, "muro");
     this.jugador = new Player(this,87.5,225, "jugador");
-    this.guerrero = new Fighter(this, 800, 315, "guerrero");
-    this.gladiador2 = new Gladiator(this, 800, 115, "gladiador");
-    this.lancer = new Lancer(this, 800, 215, "lancer");
+    this.guerrero = new Fighter(this, 800, 600, "guerrero");
+    this.gladiador2 = new Gladiator(this, 800, 600, "gladiador");
+    this.lancer = new Lancer(this, 800, 600, "lancer");
 
     this.statbar = new StatusBar(this, 400, 35, "statBar");
     this.health = 100;
@@ -102,6 +102,8 @@ export default class Game extends Phaser.Scene {
     this.timeIniLanc = 0;
     //control de timepo entre oleada
     this.timeOleada = 5000;
+    //control de tiempo lanzamineto flechas
+    this.timeArrow = 250;
 
     //colision enemigos y muro
     this.physics.add.collider(this.guerreros,this.platforms,this.damage,null,this);
@@ -132,9 +134,13 @@ export default class Game extends Phaser.Scene {
     //control del lanzamiento de flechas
     if(this.cursor.right.isDown)
     {
-      if (!this.lanzada){
-        this.flecha = new Arrow(this,this.jugador.x + (this.jugador.x/2), this.jugador.y, "flecha");
-        this.lanzada = true;
+      this.timeArrow -= delta;
+      if(this.timeArrow <= 0){
+        if (!this.lanzada){
+          this.flecha = new Arrow(this,this.jugador.x + (this.jugador.x/2), this.jugador.y, "flecha");
+          this.lanzada = true;
+        }
+        this.timeArrow = 250;
       }
     }
     else if(this.cursor.right.isUp){
