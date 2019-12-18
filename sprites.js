@@ -3,7 +3,7 @@ export default class Sprites extends Phaser.GameObjects.Sprite{
 		super(scene, x, y, type);
 		scene.add.existing(this);
 		scene.physics.world.enable(this);
-		this.body.setCollideWorldBounds(true);
+		this.body.setCollideWorldBounds(false);
 	}
 }
 

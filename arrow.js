@@ -5,6 +5,7 @@ export default class Arrow extends Sprites{
 		super(scene, x, y, type);
 		this.setScale(0.15);
 		this.body.setVelocity(500,0); 
+		//this.body.collideWorldBounds = false;
 	}
 	hitArrow(obj1, obj2) {
    		obj1.destroy();

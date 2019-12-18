@@ -88,7 +88,7 @@ export default class MainMenu extends Phaser.Scene {
        audio.play();
        botonPlay.setInteractive();
        botonPlay.on("pointerdown", ()=>{
-       audio.stop();
+            audio.stop();
           const fontJSON = this.cache.json.get('fontJSON');
           this.cache.bitmapFont.add('pixel', Phaser.GameObjects.RetroFont.Parse(this, fontJSON));
            this.scene.start('Game');
