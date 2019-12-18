@@ -2,7 +2,7 @@ class Gameover extends Phaser.Scene {
     constructor() {
         super('Gameover');
     }
-/*
+
     preload() {
         console.log('Soy Gameover');
     }
@@ -29,7 +29,7 @@ class Gameover extends Phaser.Scene {
         clearTimeout(this.evento);
         this.scene.start('Menu');
     }
-*/
+
 }
 
 export default Gameover;

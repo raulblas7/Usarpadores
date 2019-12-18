@@ -4,7 +4,6 @@ import Player from './player.js';
 import Gladiator from './gladiador.js';
 import Lancer from './lancer.js';
 import Fighter from './fighter.js';
-import StatusBar from './statusbar.js';
 import Health from './health.js';
 import Wave from './wave.js';
 import PowHealth from './PowHealth.js';
@@ -56,7 +55,7 @@ export default class Game extends Phaser.Scene {
     this.registry.set('health',500);
 
     this.puntos=0;
-    this.health=1000;
+    this.health=100;
   }
   create() {
     //botones para los power-ups
@@ -76,8 +75,6 @@ export default class Game extends Phaser.Scene {
     this.gladiador2 = new Gladiator(this, 800, 115, "gladiador");
     this.lancer = new Lancer(this, 800, 215, "lancer");
 
-    this.statbar = new StatusBar(this, 400, 35, "statBar");
-    this.health = 100;
     this.terreno.setScale(7);
     
     this.powHealth = new PowHealth(this, 30, 425, "health");
