@@ -42,7 +42,7 @@ export default class Game extends Phaser.Scene {
     this.registry.set('health',500);
 
     this.puntos=0;
-    this.health=500;
+    this.health=1000;
   }
   create() {
     
@@ -193,7 +193,7 @@ export default class Game extends Phaser.Scene {
     {
       this.health-=100;
       this.registry.events.emit('vida',this.health);
-       }
+    }
     else {this.scene.start('GameOver');}
   }
 
@@ -208,13 +208,6 @@ export default class Game extends Phaser.Scene {
    this.lessEnem();
 
    flecha.hitArrow(enemy,flecha);
-
-   this.puntos++;
-   this.registry.events.emit('puntos',this.puntos);
-
-  
-
-    
   }
   
 }
