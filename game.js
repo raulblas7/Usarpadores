@@ -19,6 +19,9 @@ var actNumGuerreros = 0;
 var actNumLancers = 0;
 //variable de oleada
 var numOleada = 1;
+var ponTitulo = true;
+//velocidad de jugador
+var playVel = 200;
 export default class Game extends Phaser.Scene {
   constructor(   
     ) {
@@ -41,8 +44,12 @@ export default class Game extends Phaser.Scene {
     this.load.image("health", "images/POWUPSALUD.png");
     this.load.image("bomb", "images/POWUPBOMB.png");
     this.load.image("speed", "images/POWUPSPEED.png");
+    this.load.image("explosion", "images/Explosion.png");
     //muro
     this.load.image("muro", "images/muro.png");
+    //texto
+    this.load.image("finOleada", "images/finoleada.png");
+
 
     this.lanzada = false;
     this.registry.set('points',0);
@@ -52,6 +59,10 @@ export default class Game extends Phaser.Scene {
     this.health=1000;
   }
   create() {
+    //botones para los power-ups
+    this.input.keyboard.on('keydown_Q', this.powHealing, this);
+    this.input.keyboard.on('keydown_W', this.powBombing, this);
+    this.input.keyboard.on('keydown_E', this.powSpeeding, this);
     
     this.scene.launch('UI');
     this.platforms = this.physics.add.staticGroup();
@@ -72,16 +83,7 @@ export default class Game extends Phaser.Scene {
     this.powHealth = new PowHealth(this, 30, 425, "health");
     this.powBomb = new PowBomb(this, 70, 425, "bomb");
     this.powSpeed = new PowSpeed(this, 110, 425, "speed");
-    
-    /*this.powHealth = this.add.image(30, 425, "health");
-    this.powBomb = this.add.image(70, 425, "bomb");
-    this.powSpeed = this.add.image(120, 425, "speed");
 
-    this.powHealth.setScale(0.1);
-    this.powBomb.setScale(0.1);
-    this.powSpeed.setScale(0.1);*/
- flechas
-    //
     this.wave = new Wave(numOleada);
     //control de enemigos por oleada
     if(this.wave.number >= 0){
@@ -95,9 +97,6 @@ export default class Game extends Phaser.Scene {
 
     //control de tiempos de spawn de enemigos
     this.timeIni = 0;
-    this.timeSpawnGlad = /*Phaser.Math.Between(3000, 5000)*/ 200;
-    this.timeSpawnFight = 300;
-    this.timeSpawnLanc = 500; 
     this.timeIniGlad = 0;
     this.timeIniFight = 0;
     this.timeIniLanc = 0;
@@ -112,20 +111,20 @@ export default class Game extends Phaser.Scene {
 
    this.registry.events.on('changedata',(parent,key,data)=>
     {
-if(key==='points'){console.log(data);}
-if(key==='health'){console.log(data);}
+      if(key==='points'){console.log(data);}
+      if(key==='health'){console.log(data);}
 
     });
     
   }
   update(time, delta) {  
-    
+    /////////////////////////////////////////////////////control jugador y flechas////////////////////////////////////////////////////
     //control del jugador
     if(this.cursor.down.isDown){
-        this.jugador.body.setVelocityY(200);
+        this.jugador.body.setVelocityY(playVel);
     }
     else if(this.cursor.up.isDown){
-        this.jugador.body.setVelocityY(-200);
+        this.jugador.body.setVelocityY(-playVel);
     }
     else {
         this.jugador.body.setVelocityY(0);
@@ -134,14 +133,11 @@ if(key==='health'){console.log(data);}
     if(this.cursor.right.isDown)
     {
       if (!this.lanzada){
-       // this.statbar.setPercent(200);
         this.flecha = new Arrow(this,this.jugador.x + (this.jugador.x/2), this.jugador.y, "flecha");
-       // console.log(this.flecha);
         this.lanzada = true;
       }
     }
     else if(this.cursor.right.isUp){
-
       this.lanzada = false;
     }
     if (this.flecha != undefined) {
@@ -151,37 +147,43 @@ if(key==='health'){console.log(data);}
       this.physics.add.collider(this.lancers,this.flecha,this.flechaGolpea, null, this);
     }
 
+    /////////////////////////////////////////////////////control oleadas////////////////////////////////////////////////////
     console.log(this.totalEnemigos);
 
-flechas
+    
     if(this.totalEnemigos<=0){
-      
-      this.timeOleada -= delta;
+        
+        if(ponTitulo){
+          this.finOleada = this.add.image(350, 225, "finOleada");
+          ponTitulo = false;
+        }
+        
+        this.timeOleada -= delta;
+        
 
-      if(this.timeOleada <= 0){
-        numOleada++;
-      this.wave = new Wave(numOleada);
-      numGladiadores = this.wave.numGladiadores1;
-      numGuerreros = this.wave.numGuerreros1;
-      numLancers = this.wave.numLancers1;
-      this.totalEnemigos = numGladiadores + numGuerreros + numLancers;
+        if(this.timeOleada <= 0){
+          numOleada++;
+          this.wave = new Wave(numOleada);
+          numGladiadores = this.wave.numGladiadores1;
+          numGuerreros = this.wave.numGuerreros1;
+          numLancers = this.wave.numLancers1;
+          this.totalEnemigos = numGladiadores + numGuerreros + numLancers;
 
-      actNumGuerreros = actNumLancers = actNumGladiadores = 0;
+          actNumGuerreros = actNumLancers = actNumGladiadores = 0;
 
-      this.timeIni = 0;
-      this.timeSpawnGlad = /*Phaser.Math.Between(3000, 5000)*/ 2000; ///////////////////////////////////////////////////////////////////////
-      this.timeSpawnFight = 3000;
-      this.timeSpawnLanc = 5000; 
-      this.timeIniGlad = 0;
-      this.timeIniFight = 0;
-      this.timeIniLanc = 0;
+          this.timeIni = 0;
+          this.timeIniGlad = 0;
+          this.timeIniFight = 0;
+          this.timeIniLanc = 0;
 
-      alert("fin oleada");
-        this.timeOleada = 5000;
-      } 
+          this.finOleada.destroy();
+
+          this.timeOleada = 5000;
+          ponTitulo = true;
+        } 
     }
 
-    //spawn de enemigos
+    /////////////////////////////////////////////////////spawn de enemigos////////////////////////////////////////////////////
     if (this.gladiadores != undefined && this.guerreros != undefined && this.lancers != undefined) {
 
           //creacion de enemigos
@@ -221,17 +223,17 @@ flechas
         }      
   }
 
+  /////////////////////////////////////////////////////resto de metodos////////////////////////////////////////////////////
   damage(enemy,platform){
     if (this.health>0)
     {
-      this.health-=10;
+      this.health -= 10;
       this.registry.set('health',this.health);
     }
     else {this.scene.start('GameOver');}
   }
 
-  lessEnem(){
-    
+  lessEnem(){   
     this.totalEnemigos -= 1;
     console.log(this.totalEnemigos);
   }
@@ -240,19 +242,22 @@ flechas
     this.flecha.hitArrow(enemy, arrow);   
     this.lessEnem();
   }
-  hit(enemy,flecha)
-  {
- 
-   this.lessEnem();
 
-   flecha.hitArrow(enemy,flecha);
+  powHealing(){ //aqui controlamos el tiempo de cada uno
+    console.log("healed");
+  }
 
-   this.puntos++;
-   this.registry.events.emit('puntos',this.puntos);
+  powBombing(){
+    console.log("bombed");
+    this.bomb = this.add.image(350, 225, "bomb");
+    this.bomb.setScale(0.1);
+    this.Explosion = this.add.image(350,225, "explosion");
+    this.Explosion.setScale(0.1);
+  }
 
-  
-
-    
+  powSpeeding(){
+    console.log("sped up");
+    playVel = 500;
   }
   
 }

@@ -5,4 +5,7 @@ export default class PowSpeed extends Sprites{
 		super(scene, x, y, type);
 		this.setScale(0.1);
 	}
+	increaseSpeed(){
+		
+	}
 }
