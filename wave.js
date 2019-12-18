@@ -3,21 +3,25 @@ export default class Wave{
 	constructor(number){
         //asignamos el numero de la oleada
         this.number = number;
+
+        this.totalWaves = 3; //para saber is hemos completado todas las oleadas
+
+
         //cantidad de cada tipo de enemigo por oleada
         if(number == 1){
-            this.numGladiadores1 = 1;
-            this.numGuerreros1 = 1;
-            this.numLancers1 = 1;
+            this.numGladiadores1 = 5;
+            this.numGuerreros1 = 4;
+            this.numLancers1 = 5;
         }
         else if(number == 2){
-            this.numGladiadores1 = 3;
-            this.numGuerreros1 = 3;
-            this.numLancers1 = 1;
+            this.numGladiadores1 = 10;
+            this.numGuerreros1 = 15;
+            this.numLancers1 = 10;
         }
         else if(number == 3){
-            this.numGladiadores1 = 2;
-            this.numGuerreros1 = 2;
-            this.numLancers1 = 2;
+            this.numGladiadores1 = 30;
+            this.numGuerreros1 = 20;
+            this.numLancers1 = 20;
         }
         
     }
