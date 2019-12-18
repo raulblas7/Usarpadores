@@ -10,6 +10,7 @@ import Wave from './wave.js';
 import PowHealth from './PowHealth.js';
 import PowBomb from './PowBomb.js';
 import PowSpeed from './PowSpeed.js';
+import Explosion from './explosion.js';
 //variables para la cantidad de enemigos
 var numGladiadores;
 var numGuerreros;
@@ -41,10 +42,15 @@ export default class Game extends Phaser.Scene {
   	this.load.image("lancer", "images/lancer1.png");
     this.load.image("flecha","images/Arrow1.png");
     //powups
+    this.load.image("placaPwups", "images/placapowerups.png");
     this.load.image("health", "images/POWUPSALUD.png");
     this.load.image("bomb", "images/POWUPBOMB.png");
+    this.load.image("bombPlatform", "images/bombplatform.png");
     this.load.image("speed", "images/POWUPSPEED.png");
     this.load.image("explosion", "images/Explosion.png");
+    this.load.image("letterW", "images/letterW.png");
+    this.load.image("letterQ", "images/letterQ.png");
+    this.load.image("letterE", "images/letterE.png");
     //muro
     this.load.image("muro", "images/muro.png");
     //texto
@@ -57,12 +63,12 @@ export default class Game extends Phaser.Scene {
 
     this.puntos=0;
     this.health=1000;
+
+    this.letterQcreated = false;
+    this.letterWcreated = false;
+    this.letterEcreated = false;
   }
   create() {
-    //botones para los power-ups
-    this.input.keyboard.on('keydown_Q', this.powHealing, this);
-    this.input.keyboard.on('keydown_W', this.powBombing, this);
-    this.input.keyboard.on('keydown_E', this.powSpeeding, this);
     
     this.scene.launch('UI');
     this.platforms = this.physics.add.staticGroup();
@@ -75,14 +81,19 @@ export default class Game extends Phaser.Scene {
     this.guerrero = new Fighter(this, 800, 600, "guerrero");
     this.gladiador2 = new Gladiator(this, 800, 600, "gladiador");
     this.lancer = new Lancer(this, 800, 600, "lancer");
+    this.bombPlatform = this.add.image(350,225, "bombPlatform");
+
+    this.bombPlatform.setScale(0.1);
 
     this.statbar = new StatusBar(this, 400, 35, "statBar");
     this.health = 100;
     this.terreno.setScale(7);
     
-    this.powHealth = new PowHealth(this, 30, 425, "health");
-    this.powBomb = new PowBomb(this, 70, 425, "bomb");
-    this.powSpeed = new PowSpeed(this, 110, 425, "speed");
+    this.placaPwups = this.add.image(635,415, "placaPwups");
+    this.placaPwups.setScale(0.4);
+    this.powHealth = new PowHealth(this, 590, 415, "health");
+    this.powBomb = new PowBomb(this, 635, 415, "bomb");
+    this.powSpeed = new PowSpeed(this, 680, 415, "speed");
 
     this.wave = new Wave(numOleada);
     //control de enemigos por oleada
@@ -100,10 +111,14 @@ export default class Game extends Phaser.Scene {
     this.timeIniGlad = 0;
     this.timeIniFight = 0;
     this.timeIniLanc = 0;
-    //control de timepo entre oleada
+    //control de tiempo entre oleada
     this.timeOleada = 5000;
     //control de tiempo lanzamineto flechas
     this.timeArrow = 250;
+    //control de tiempo de powerUps
+    this.timeBomb = 2000;
+    this.timeHealth = 1000;
+    this.timeSpeed = 1500;
 
     //colision enemigos y muro
     this.physics.add.collider(this.guerreros,this.platforms,this.damage,null,this);
@@ -117,11 +132,18 @@ export default class Game extends Phaser.Scene {
       if(key==='health'){console.log(data);}
 
     });
+    //control de teclado powerups
+    this.cursor = this.input.keyboard.createCursorKeys();
+    //salud
+    this.cursor_Q = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
+    //salud
+    this.cursor_E = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
+    //salud
+    this.cursor_W = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
     
   }
   update(time, delta) {  
     /////////////////////////////////////////////////////control jugador y flechas////////////////////////////////////////////////////
-    //control del jugador
     if(this.cursor.down.isDown){
         this.jugador.body.setVelocityY(playVel);
     }
@@ -152,7 +174,43 @@ export default class Game extends Phaser.Scene {
       this.physics.add.collider(this.gladiadores,this.flecha,this.flechaGolpea, null, this);
       this.physics.add.collider(this.lancers,this.flecha,this.flechaGolpea, null, this);
     }
-
+    /////////////////////////////////////////////////////control powerups////////////////////////////////////////////////////
+    this.timeHealth -=delta;
+    this.timeBomb -=delta;
+    this.timeSpeed -=delta;
+    if(this.timeHealth <= 0 && !this.letterQcreated){
+      this.letterQ = this.add.image(590, 415, "letterQ");
+      this.letterQcreated = true;
+      this.letterQ.setScale(0.1);
+    }
+    if(this.timeHealth <= 0 && this.cursor_Q.isDown){
+      this.powHealing();
+      this.timeHealth = 1000;
+      this.letterQ.destroy();
+      this.letterQcreated = false;
+    }
+    if(this.timeBomb <= 0 && !this.letterWcreated){
+      this.letterW = this.add.image(635, 415, "letterW");
+      this.letterWcreated = true;
+      this.letterW.setScale(0.1);
+    }
+    if(this.timeBomb <= 0 && this.cursor_W.isDown){
+      this.powBombing();
+      this.timeBomb = 2000;
+      this.letterW.destroy();
+      this.letterWcreated = false;
+    }
+    if(this.timeSpeed <= 0 && !this.letterEcreated){
+      this.letterE = this.add.image(680, 415, "letterE");
+      this.letterEcreated = true;
+      this.letterE.setScale(0.1);
+    }
+    if(this.timeSpeed <= 0 && this.cursor_E.isDown){
+      this.powSpeeding();
+      this.timeSpeed = 1500;
+      this.letterE.destroy();
+      this.letterEcreated = false;
+    }
     /////////////////////////////////////////////////////control oleadas////////////////////////////////////////////////////
     console.log(this.totalEnemigos);
 
@@ -254,18 +312,16 @@ export default class Game extends Phaser.Scene {
   }
 
   powBombing(){
-    console.log("bombed");
     this.bomb = this.add.image(350, 225, "bomb");
     this.bomb.setScale(0.1);
     this.time.addEvent({
       delay: 2000,
       callback: ()=>{
         
-        this.Explosion = this.add.image(350,225, "explosion");
-        this.physics.add.collider(this.guerreros,this.Explosion, this.explode, null, this);
-        this.physics.add.collider(this.gladiadores,this.Explosion, this.explode, null, this);
-        this.physics.add.collider(this.lancers,this.Explosion, this.explode, null, this);
-        this.Explosion.setScale(0.3);
+        this.Explosion = new Explosion(this, 350,225, "explosion");
+        this.physics.add.collider(this.guerreros,this.Explosion, this.expGolpea, null, this);
+        this.physics.add.collider(this.gladiadores,this.Explosion, this.expGolpea, null, this);
+        this.physics.add.collider(this.lancers,this.Explosion, this.expGolpea, null, this);
         this.bomb.destroy();
         this.time.addEvent({
           delay: 2000,
@@ -280,9 +336,9 @@ export default class Game extends Phaser.Scene {
     
   }
 
-  explode(obj1, obj2){
-    obj2.destroy();
-    console.log("heya00");
+  expGolpea(enemy, explosion){
+    this.Explosion.hitExp(enemy, explosion);   
+    this.lessEnem();
   }
 
   powSpeeding(){
