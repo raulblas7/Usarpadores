@@ -3,32 +3,55 @@ class UI extends Phaser.Scene {
     constructor() {
         super('UI');
         this.score = 0;
+        this.health=1000;
 
     }
 
     preload() {
         console.log('Soy UI');
-        this.load.image("statBar","images/statusbar.png");
 
     }
     
     create() {
 
-        this.statusbar = this.add.image(0,0, "statBar");
-       // this.statusbar.width=1;
-       // statusbar.x=game.width/2-statusbar.width/2;
-      //statusbar.y=game.height;
-
-          //  Our Text object to display the Score
-         this.add.text(20, 20, 'Puntos', { font: '48px Arial', fill: '#000000' }); 
-
-          this.puntos= this.add.text(240, 20, '0', { font: '48px Arial', fill: '#000000' });
-
-        this.registry.events.on('puntos',(puntos)=>
-        {
-           this.puntos.setText(puntos);
+       
+        var progressBar = this.add.graphics();
+        var progressBox = this.add.graphics();
+        progressBox.fillStyle(0x222222, 0.8);
+        progressBox.fillRect(170, 20,( this.health/2)+20, 50);
+        
+        var width = this.cameras.main.width;
+        var height = this.cameras.main.height;
+        
+        
+        var percentText = this.make.text({
+            x:200,
+            y: 10,
+            text: '0%',
+            style: {
+                font: '18px monospace',
+                fill: '#ffffff'
+            }
         });
-     
+        percentText.setOrigin(0.5, 0.5);
+        
+         
+
+        percentText.setText(parseInt(this.health));
+        progressBar.clear();
+        progressBar.fillStyle(0x5FFF33, 1);
+      progressBar.fillRect(180, 30 ,this.health/2 , 30);
+        this.registry.events.on('vida',(vida)=>
+        { 
+            percentText.setText(parseInt(vida));
+             console.log("vida");
+             progressBar.clear();
+             progressBar.fillStyle(0x5FFF33, 1);
+
+             progressBar.fillRect(180, 30 ,vida/2, 30);
+        }
+        );
+
 
     }
 

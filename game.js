@@ -4,7 +4,6 @@ import Player from './player.js';
 import Gladiator from './gladiador.js';
 import Lancer from './lancer.js';
 import Fighter from './fighter.js';
-import StatusBar from './statusbar.js';
 import Health from './health.js';
 import Wave from './wave.js';
 import PowHealth from './PowHealth.js';
@@ -59,14 +58,16 @@ export default class Game extends Phaser.Scene {
 
     this.lanzada = false;
     this.registry.set('points',0);
-    this.registry.set('health',1000);
+    this.registry.set('health',500);
 
     this.puntos=0;
+
     this.health=1000;
 
     this.letterQcreated = false;
     this.letterWcreated = false;
     this.letterEcreated = false;
+
   }
   create() {
     
@@ -85,8 +86,6 @@ export default class Game extends Phaser.Scene {
 
     this.bombPlatform.setScale(0.1);
 
-    this.statbar = new StatusBar(this, 400, 35, "statBar");
-    this.health = 100;
     this.terreno.setScale(7);
     
     this.placaPwups = this.add.image(635,415, "placaPwups");
@@ -133,7 +132,7 @@ export default class Game extends Phaser.Scene {
    this.registry.events.on('changedata',(parent,key,data)=>
     {
       if(key==='points'){console.log(data);}
-      if(key==='health'){console.log(data);}
+      if(key==='vida'){console.log(data);}
 
     });
     //control de teclado powerups
@@ -298,10 +297,12 @@ export default class Game extends Phaser.Scene {
 
   /////////////////////////////////////////////////////resto de metodos////////////////////////////////////////////////////
   damage(enemy,platform){
+    
+
     if (this.health>0)
     {
-      this.health -= 10;
-      this.registry.set('health',this.health);
+      this.health-=100;
+      this.registry.events.emit('vida',this.health);
     }
     else {this.scene.start('GameOver');}
   }
