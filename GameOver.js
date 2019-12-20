@@ -3,31 +3,16 @@ class Gameover extends Phaser.Scene {
         super('GameOver');
     }
 
-    preload() {
+    preload(){
+        this.load.image("youLose", "images/hasperdido.png");
         this.load.image("fondoMenu", "images/fondomenu.png");
     }
 
-    create() {
-        this.fondoMenu = this.add.image(350,200,"fondoMenu");
+    create(){
         this.scene.stop('UI');
-        
-        this.evento = setTimeout(() => {
-            this.salirEscene();
-        }, 5000);
-        
-        this.input.keyboard.on('keydown_ENTER', () => {
-            this.salirEscene();
-        });
-        this.input.on('pointerdown', () => {
-            this.salirEscene();
-        })
+       this.fondoMenu = this.add.image(350,200,"fondoMenu");
+       this.youLose = this.add.image(350,180, "youLose");
     }
-
-    salirEscene() {
-        clearTimeout(this.evento);
-        this.scene.start('MainMenu');
-    }
-
 }
 
 export default Gameover;
